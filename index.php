@@ -38,48 +38,8 @@
 			  <label for="comment">Código:</label>
 			  <textarea class="form-control" rows="5" id="comment"></textarea>
 			</div>
-			<div class="panel panel-default">
-		    <div class="panel-heading">Analise léxica</div>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>
-							Linha
-						</th>
-						<th>
-							Código
-						</th>
-						<th>
-							Token
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							1
-						</td>
-						<td>
-							2
-						</td>
-						<td>
-							a
-						</td>
-					</tr>
-					<tr>
-						<td>
-							1
-						</td>
-						<td>
-							2
-						</td>
-						<td>
-							a
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			</div>
+
+			<?php include("listaAnaliseLexica.php")?>
 
 			<div class="panel panel-default">
 		    <div class="panel-heading">Erros</div>
