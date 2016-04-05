@@ -27,45 +27,24 @@
 				            <li><a href="#">Salvar</a></li>
 				          </ul>
 				        </li>
-						<li class="active">
+<!-- 						<li class="active">
 							<a href="#">Executar</a>
-						</li>
+						</li> -->
 					</ul>
 				</div>
 			</nav>
 
-			<div class="form-group">
-			  <label for="comment">Código:</label>
-			  <textarea class="form-control" rows="5" id="comment"></textarea>
-			</div>
+			<form role="form" action="index.php" method="get">
+			    <div class="form-group">
+			  		<label for="email">Código:</label>
+			    	<textarea class="form-control" rows="10" name="codigo-fonte"></textarea>
+			    </div>
+			    <input type="submit" class="btn btn-primary" value="Executar">
+			</form>
 
 			<?php include("listaAnaliseLexica.php")?>
 
-			<div class="panel panel-default">
-		    <div class="panel-heading">Erros</div>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>
-							Linha
-						</th>
-						<th>
-							Erro
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="danger">
-						<td>
-							1
-						</td>
-						<td>
-							erroouuuu
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			</div>
+			<?php include("listaErrosLexicos.php")?>
 
 		</div>
 	</div>
