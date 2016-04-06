@@ -133,22 +133,135 @@ class Tokens
 		$token->codigo = '25';
 		$arrayTokens[] = $token;
 
-
 		$token = new Token();
 		$token->name = 'INTEGER';
 		$token->codigo = '26';
 		$arrayTokens[] = $token;
-
 
 		$token = new Token();
 		$token->name = 'FOR';
 		$token->codigo = '27';
 		$arrayTokens[] = $token;
 
-
 		$token = new Token();
 		$token->name = 'TO';
 		$token->codigo = '28';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '+';
+		$token->codigo = '29';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '-';
+		$token->codigo = '30';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '*';
+		$token->codigo = '31';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '/';
+		$token->codigo = '32';
+		$arrayTokens[] = $token;
+		$token = new Token();
+
+		$token->name = '[';
+		$token->codigo = '33';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = ']';
+		$token->codigo = '34';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '(';
+		$token->codigo = '35';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = ')';
+		$token->codigo = '36';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = ':=';
+		$token->codigo = '37';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = ':';
+		$token->codigo = '38';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '=';
+		$token->codigo = '39';
+		$arrayTokens[] = $token;
+
+
+		$token = new Token();
+		$token->name = '>';
+		$token->codigo = '40';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '>=';
+		$token->codigo = '41';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '<';
+		$token->codigo = '42';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '<=';
+		$token->codigo = '43';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '<>';
+		$token->codigo = '44';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = ',';
+		$token->codigo = '45';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = ';';
+		$token->codigo = '46';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = 'LITERAL';
+		$token->codigo = '47';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '.';
+		$token->codigo = '48';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '..';
+		$token->codigo = '49';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = '$';
+		$token->codigo = '50';
+		$arrayTokens[] = $token;
+
+		$token = new Token();
+		$token->name = ' ';
+		$token->codigo = '32';
 		$arrayTokens[] = $token;
 
 
