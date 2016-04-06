@@ -133,6 +133,25 @@ class Tokens
 		$token->codigo = '25';
 		$arrayTokens[] = $token;
 
+
+		$token = new Token();
+		$token->name = 'INTEGER';
+		$token->codigo = '26';
+		$arrayTokens[] = $token;
+
+
+		$token = new Token();
+		$token->name = 'FOR';
+		$token->codigo = '27';
+		$arrayTokens[] = $token;
+
+
+		$token = new Token();
+		$token->name = 'TO';
+		$token->codigo = '28';
+		$arrayTokens[] = $token;
+
+
 		return $arrayTokens;
 	}
 }
