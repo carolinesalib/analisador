@@ -261,7 +261,7 @@ class Tokens
 
 		$token = new Token();
 		$token->name = ' ';
-		$token->codigo = '32';
+		$token->codigo = '51';
 		$arrayTokens[] = $token;
 
 
