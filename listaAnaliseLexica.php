@@ -6,8 +6,15 @@ $tokens = new Tokens();
 
 // echo "<pre>"; print_r($tokens->getTokens());
 
+// echo "<pre>";
+
+$codigoFonte = $_GET["codigo-fonte"];
+$codigoFonte = explode("\n", $codigoFonte);
+
+// print_r($codigoFonte);
 ?>
 <br>
+
 <div class="panel panel-default">
 <div class="panel-heading"><b>Analise léxica</b></div>
 <table class="table">

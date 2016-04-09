@@ -29,9 +29,6 @@
 				            <li><a href="#">Salvar</a></li>
 				          </ul>
 				        </li>
-<!-- 						<li class="active">
-							<a href="#">Executar</a>
-						</li> -->
 					</ul>
 				</div>
 			</nav>
@@ -44,14 +41,16 @@
 			    <input type="submit" class="btn btn-primary" value="Executar">
 			</form>
 
-			<?php include("listaAnaliseLexica.php")?>
+			<?php
 
-			<?php include("listaErrosLexicos.php")?>
+			include("listaAnaliseLexica.php");
+
+			include("listaErrosLexicos.php");
+			?>
 
 		</div>
 	</div>
 </div>
-
 
 </body>
 </html>
