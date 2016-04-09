@@ -26,17 +26,13 @@ $codigoFonte = explode("\n", $codigoFonte);
 		</tr>
 	</thead>
 	<tbody>
+		<?php for ($i=0; $i < sizeof($codigoFonte); $i++) { ?>
 		<tr>
-			<td>
-				1
-			</td>
-			<td>
-				2
-			</td>
-			<td>
-				a
-			</td>
+			<td><?php echo $i + 1; ?></td>
+			<td> - </td>
+			<td> - </td>
 		</tr>
+		<?php } ?>
 	</tbody>
 </table>
 </div>
