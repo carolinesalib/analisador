@@ -331,8 +331,14 @@ class Tokens
 			//Procura token de palavra reservada
 			$tokenPalavraReservada = $this->findTokenPalavraReservada(substr($linha, $i));
 
+			/*
+				Identificador
+				Literal
+				Vazio
+			*/
+
 			//Procura token de número inteiro
-			$tokenNumeroInteiro = $this->findTokenNumeroInteiro(substr($linha, $i));
+			// $tokenNumeroInteiro = $this->findTokenNumeroInteiro(substr($linha, $i));
 
 			//Procura token de final de arquivo
 			$tokenFimArquivo = $this->findTokenFimArquivo(substr($linha,$i,1));
@@ -347,10 +353,10 @@ class Tokens
 				$arrayCodigoToken[] = $tokenPalavraReservada;
 				//Se existir palavra reservada, pula os caracteres da mesma
 				$i += strlen($tokenPalavraReservada->name) -1;
-			} else if ($tokenNumeroInteiro) {
-				$arrayCodigoToken[] = $tokenNumeroInteiro;
-				//Se existir palavra reservada, pula os caracteres da mesma
-				$i += strlen($tokenNumeroInteiro->name) -1;
+			// } else if ($tokenNumeroInteiro) {
+			// 	$arrayCodigoToken[] = $tokenNumeroInteiro;
+			// 	//Se existir palavra reservada, pula os caracteres da mesma
+			// 	$i += strlen($tokenNumeroInteiro->name) -1;
 			} else if ($tokenFimArquivo) {
 				$arrayCodigoToken[] = $tokenFimArquivo;
 			} else if ($tokenSimboloDuplo) {
@@ -368,7 +374,7 @@ class Tokens
 
 		for ($i=0; $i <= strlen($token); $i++) {
 
-			$stringToken = substr($token, 0, $i);
+			$stringToken = strtoupper(substr($token, 0, $i));
 
 			foreach ($tokens as $key => $value) {
 				if ($value->tipoSimbolo == TipoSimbolo::PALAVRARESERVADA && $value->name == $stringToken) return $value;
