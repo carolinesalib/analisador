@@ -4,14 +4,9 @@ require_once 'tokens.php';
 
 $tokens = new Tokens();
 
-// echo "<pre>"; print_r($tokens->getTokens());
-
-// echo "<pre>";
-
 $codigoFonte = $_GET["codigo-fonte"];
-$codigoFonte = explode("\n", $codigoFonte);
+$linhasCodigoFonte = explode("\n", $codigoFonte);
 
-// print_r($codigoFonte);
 ?>
 <br>
 
@@ -26,13 +21,28 @@ $codigoFonte = explode("\n", $codigoFonte);
 		</tr>
 	</thead>
 	<tbody>
-		<?php for ($i=0; $i < sizeof($codigoFonte); $i++) { ?>
-		<tr>
-			<td><?php echo $i + 1; ?></td>
-			<td> - </td>
-			<td> - </td>
-		</tr>
-		<?php } ?>
+		<?php
+		for ($i=0; $i < sizeof($linhasCodigoFonte); $i++) {
+
+			//Se não existir código-fonte não monta tabela
+			// if ($codigoFonte == "") continue;
+
+			$arrayTokensLinha = $tokens->getArrayCodigoToken($linhasCodigoFonte[$i]);
+
+			// for ($y=0; $y < sizeof($arrayTokensLinha); $y++) {
+			foreach ($arrayTokensLinha as $key => $token) {
+				# code...
+
+
+				echo "<tr>";
+					echo "<td> " . ($i+1) . " </td>"; //
+					echo "<td> " . $token->codigo . " </td>";
+					echo "<td> " . $token->name . " </td>";
+				echo "</tr>";
+			// }
+			}
+		}
+		?>
 	</tbody>
 </table>
 </div>

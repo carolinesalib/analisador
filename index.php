@@ -45,7 +45,7 @@
 
 			include("listaAnaliseLexica.php");
 
-			include("listaErrosLexicos.php");
+			// include("listaErrosLexicos.php");
 			?>
 
 		</div>

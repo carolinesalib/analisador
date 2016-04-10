@@ -322,6 +322,26 @@ class Tokens
 
 		return $arrayTokens;
 	}
+
+	//Retorna um array com a informação do código e token de cada caracter da linha
+	function getArrayCodigoToken($linha) {
+		$tokens = $this->getTokens();
+
+		for ($i=0; $i < strlen($linha); $i++) {
+
+			$simboloDuplo = substr($linha,$i,2);
+			$simboloSimples = substr($linha,$i,1);
+
+			foreach ($tokens as $key => $value) {
+
+				//Verifica se encontra o simbolo simples
+				if ($value->name === $simboloSimples) {
+					$arrayCodigoToken[] = $value;
+				}
+			}
+		}
+		return $arrayCodigoToken;
+	}
 }
 
 ?>
