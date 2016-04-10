@@ -158,7 +158,7 @@ class Tokens
 		$arrayTokens[] = $token;
 
 		$token = new Token();
-		$token->name = 'INTEGER';
+		$token->name = 'int';
 		$token->codigo = '26';
 		$token->tipoSimbolo = TipoSimbolo::NUMEROINTEIRO;
 		$arrayTokens[] = $token;
@@ -331,6 +331,9 @@ class Tokens
 			//Procura token de palavra reservada
 			$tokenPalavraReservada = $this->findTokenPalavraReservada(substr($linha, $i));
 
+			//Procura token de número inteiro
+			$tokenNumeroInteiro = $this->findTokenNumeroInteiro(substr($linha, $i));
+
 			//Procura token de final de arquivo
 			$tokenFimArquivo = $this->findTokenFimArquivo(substr($linha,$i,1));
 
@@ -344,6 +347,10 @@ class Tokens
 				$arrayCodigoToken[] = $tokenPalavraReservada;
 				//Se existir palavra reservada, pula os caracteres da mesma
 				$i += strlen($tokenPalavraReservada->name) -1;
+			} else if ($tokenNumeroInteiro) {
+				$arrayCodigoToken[] = $tokenNumeroInteiro;
+				//Se existir palavra reservada, pula os caracteres da mesma
+				$i += strlen($tokenNumeroInteiro->name) -1;
 			} else if ($tokenFimArquivo) {
 				$arrayCodigoToken[] = $tokenFimArquivo;
 			} else if ($tokenSimboloDuplo) {
@@ -366,6 +373,18 @@ class Tokens
 			foreach ($tokens as $key => $value) {
 				if ($value->tipoSimbolo == TipoSimbolo::PALAVRARESERVADA && $value->name == $stringToken) return $value;
 			}
+		}
+
+		return false;
+	}
+
+	function findTokenNumeroInteiro($token) {
+		$tokens = $this->getTokens();
+
+		$token = substr($token, 0, 3);
+
+		foreach ($tokens as $key => $value) {
+			if ($value->tipoSimbolo == TipoSimbolo::NUMEROINTEIRO && $value->name == $token) return $value;
 		}
 
 		return false;
