@@ -4,7 +4,9 @@ require_once 'tokens.php';
 
 $tokens = new Tokens();
 
+//Resgata conteúdo do textarea
 $codigoFonte = $_GET["codigo-fonte"];
+//Cria um array das linhas adicionadas no textarea (separando por quebra de linha)
 $linhasCodigoFonte = explode("\n", $codigoFonte);
 
 ?>
@@ -22,24 +24,18 @@ $linhasCodigoFonte = explode("\n", $codigoFonte);
 	</thead>
 	<tbody>
 		<?php
+		//Laço para percorrer cada linha do textarea
 		for ($i=0; $i < sizeof($linhasCodigoFonte); $i++) {
 
-			//Se não existir código-fonte não monta tabela
-			// if ($codigoFonte == "") continue;
-
+			//Resgata objeto tokens da linha atual
 			$arrayTokensLinha = $tokens->getArrayCodigoToken($linhasCodigoFonte[$i]);
 
-			// for ($y=0; $y < sizeof($arrayTokensLinha); $y++) {
 			foreach ($arrayTokensLinha as $key => $token) {
-				# code...
-
-
 				echo "<tr>";
 					echo "<td> " . ($i+1) . " </td>"; //
 					echo "<td> " . $token->codigo . " </td>";
 					echo "<td> " . $token->name . " </td>";
 				echo "</tr>";
-			// }
 			}
 		}
 		?>
