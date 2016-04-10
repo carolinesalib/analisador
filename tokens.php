@@ -329,14 +329,18 @@ class Tokens
 
 		for ($i=0; $i < strlen($linha); $i++) {
 
-			$simboloDuplo = substr($linha,$i,2);
-			$simboloSimples = substr($linha,$i,1);
+			$inicioString = $i+1;
+			$simboloDuplo = substr($linha,$inicioString,2);
+			$simboloSimples = substr($linha,$inicioString,1);
 
-			foreach ($tokens as $key => $value) {
+			foreach ($tokens as $key => $token) {
 
-				//Verifica se encontra o simbolo simples
-				if ($value->name === $simboloSimples) {
-					$arrayCodigoToken[] = $value;
+				//Verifica se encontra o simbolo duplo
+				if ($token->tipoSimbolo == TipoSimbolo::SIMBOLODUPLO && $token->name == $simboloDuplo) {
+					$arrayCodigoToken[] = $token;
+					$i++;
+				} else if ($token->tipoSimbolo == TipoSimbolo::SIMBOLOSIMPLES && $token->name == $simboloSimples) { //Verifica se encontra o simbolo simples
+					$arrayCodigoToken[] = $token;
 				}
 			}
 		}
