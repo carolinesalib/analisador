@@ -329,9 +329,8 @@ class Tokens
 
 		for ($i=0; $i < strlen($linha); $i++) {
 
-			$inicioString = $i+1;
-			$simboloDuplo = substr($linha,$inicioString,2);
-			$simboloSimples = substr($linha,$inicioString,1);
+			$simboloDuplo = substr($linha,$i,2);
+			$simboloSimples = substr($linha,$i,1);
 
 			foreach ($tokens as $key => $token) {
 

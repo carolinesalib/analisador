@@ -36,7 +36,7 @@
 			<form role="form" action="index.php" method="get">
 			    <div class="form-group">
 			  		<label for="email">Código:</label>
-			    	<textarea class="form-control" rows="10" name="codigo-fonte"></textarea>
+			    	<textarea class="form-control" rows="10" name="codigo-fonte"><?php echo $_GET["codigo-fonte"]; ?></textarea>
 			    </div>
 			    <input type="submit" class="btn btn-primary" value="Executar">
 			</form>
