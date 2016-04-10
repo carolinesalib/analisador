@@ -334,8 +334,9 @@ class Tokens
 			/*
 				Identificador
 				Literal
-				Inteiro is_int()
 			*/
+
+			$tokenLiteral = $this->findTokenLiteral(substr($linha, $i));
 
 			//Procura token de número inteiro
 			$tokenNumeroInteiro = $this->findTokenNumeroInteiro(substr($linha, $i));
@@ -353,6 +354,10 @@ class Tokens
 				$arrayCodigoToken[] = $tokenPalavraReservada;
 				//Se existir palavra reservada, pula os caracteres da mesma
 				$i += $tokenPalavraReservada->qtdeCaracter;
+			} else if ($tokenLiteral) {
+				$arrayCodigoToken[] = $tokenLiteral;
+				//Se for literal, pula a quantidade de caracter do mesmo
+				$i += $tokenLiteral->qtdeCaracter;
 			} else if ($tokenNumeroInteiro) {
 				$arrayCodigoToken[] = $tokenNumeroInteiro;
 				//Se for inteiro, pula a quantidade de caracter do mesmo
@@ -387,6 +392,33 @@ class Tokens
 		return false;
 	}
 
+	function findTokenLiteral($token) {
+		$tokens = $this->getTokens();
+
+		//Verifica se é token literal, chegando se inicia e termina com aspas, sejam elas simples ou duplas
+		$inicioAspasSimples = (substr($token, 0, 1) == "'");
+		$inicioAspasDuplas = (substr($token, 0, 1) == '"');
+
+		$stringDepoisAspa = substr($token, 1);
+
+		if ($inicioAspasSimples) {
+			$posicaoSegundaAspa = strpos($stringDepoisAspa, "'")+1;
+			$stringToken = substr($token, 0, $posicaoSegundaAspa);
+		} else if ($inicioAspasDuplas) {
+			$posicaoSegundaAspa = strpos($stringDepoisAspa, '"')+1;
+			$stringToken = substr($token, 0, $posicaoSegundaAspa);
+		} else {
+			return false;
+		}
+
+		foreach ($tokens as $key => $value) {
+			if ($value->tipoSimbolo == TipoSimbolo::LITERAL) {
+				$value->qtdeCaracter = strlen($stringToken);
+				return $value;
+			}
+		}
+	}
+
 	function findTokenNumeroInteiro($token) {
 		$tokens = $this->getTokens();
 
@@ -395,7 +427,6 @@ class Tokens
 
 		if (intval($stringToken)) {
 
-			echo $stringToken . "<br>";
 		 	foreach ($tokens as $key => $value) {
 		 		if ($value->tipoSimbolo == TipoSimbolo::NUMEROINTEIRO) {
 		 			$value->qtdeCaracter = strlen($stringToken) - 1;
