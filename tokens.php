@@ -331,6 +331,9 @@ class Tokens
 			//Procura token de palavra reservada
 			$tokenPalavraReservada = $this->findTokenPalavraReservada(substr($linha, $i));
 
+			//Procura token de final de arquivo
+			$tokenFimArquivo = $this->findTokenFimArquivo(substr($linha,$i,1));
+
 			//Procura token de simbolo duplo
 			$tokenSimboloDuplo = $this->findTokenSimboloDuplo(substr($linha,$i,2));
 
@@ -341,6 +344,8 @@ class Tokens
 				$arrayCodigoToken[] = $tokenPalavraReservada;
 				//Se existir palavra reservada, pula os caracteres da mesma
 				$i += strlen($tokenPalavraReservada->name) -1;
+			} else if ($tokenFimArquivo) {
+				$arrayCodigoToken[] = $tokenFimArquivo;
 			} else if ($tokenSimboloDuplo) {
 				$arrayCodigoToken[] = $tokenSimboloDuplo;
 				$i++;
@@ -361,6 +366,16 @@ class Tokens
 			foreach ($tokens as $key => $value) {
 				if ($value->tipoSimbolo == TipoSimbolo::PALAVRARESERVADA && $value->name == $stringToken) return $value;
 			}
+		}
+
+		return false;
+	}
+
+	function findTokenFimArquivo($token) {
+		$tokens = $this->getTokens();
+
+		foreach ($tokens as $key => $value) {
+			if ($value->tipoSimbolo == TipoSimbolo::FIMARQUIVO && $value->name == $token) return $value;
 		}
 
 		return false;
