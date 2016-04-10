@@ -1,11 +1,16 @@
 <?php
 
 require_once 'tokens.php';
+require_once 'comentarios.php';
 
 $tokens = new Tokens();
 
 //Resgata conteúdo do textarea
 $codigoFonte = $_GET["codigo-fonte"];
+
+//Remove comentários de linha e de bloco
+$codigoFonte = Comentarios::Remove($codigoFonte);
+
 //Cria um array das linhas adicionadas no textarea (separando por quebra de linha)
 $linhasCodigoFonte = explode("\n", $codigoFonte);
 
