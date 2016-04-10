@@ -332,12 +332,10 @@ class Tokens
 			$tokenPalavraReservada = $this->findTokenPalavraReservada(substr($linha, $i));
 
 			//Procura token de simbolo duplo
-			$simboloDuplo = substr($linha,$i,2);
-			$tokenSimboloDuplo = $this->findToken($simboloDuplo);
+			$tokenSimboloDuplo = $this->findTokenSimboloDuplo(substr($linha,$i,2));
 
 			//Procura token de simbolo simples
-			$simboloSimples = substr($linha,$i,1);
-			$tokenSimboloSimples = $this->findToken($simboloSimples);
+			$tokenSimboloSimples = $this->findTokenSimboloSimples(substr($linha,$i,1));
 
 			if ($tokenPalavraReservada) {
 				$arrayCodigoToken[] = $tokenPalavraReservada;
@@ -368,11 +366,21 @@ class Tokens
 		return false;
 	}
 
-	function findToken($token) {
+	function findTokenSimboloDuplo($token) {
 		$tokens = $this->getTokens();
 
 		foreach ($tokens as $key => $value) {
-			if ($value->name == $token) return $value;
+			if ($value->tipoSimbolo == TipoSimbolo::SIMBOLODUPLO && $value->name == $token) return $value;
+		}
+
+		return false;
+	}
+
+	function findTokenSimboloSimples($token) {
+		$tokens = $this->getTokens();
+
+		foreach ($tokens as $key => $value) {
+			if ($value->tipoSimbolo == TipoSimbolo::SIMBOLOSIMPLES && $value->name == $token) return $value;
 		}
 
 		return false;
