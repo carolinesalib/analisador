@@ -325,25 +325,33 @@ class Tokens
 
 	//Retorna um array com a informação do código e token de cada caracter da linha
 	function getArrayCodigoToken($linha) {
-		$tokens = $this->getTokens();
 
 		for ($i=0; $i < strlen($linha); $i++) {
 
 			$simboloDuplo = substr($linha,$i,2);
 			$simboloSimples = substr($linha,$i,1);
 
-			foreach ($tokens as $key => $token) {
+			$tokenSimboloDuplo = $this->findToken($simboloDuplo);
+			$tokenSimboloSimples = $this->findToken($simboloSimples);
 
-				//Verifica se encontra o simbolo duplo
-				if ($token->tipoSimbolo == TipoSimbolo::SIMBOLODUPLO && $token->name == $simboloDuplo) {
-					$arrayCodigoToken[] = $token;
-					$i++;
-				} else if ($token->tipoSimbolo == TipoSimbolo::SIMBOLOSIMPLES && $token->name == $simboloSimples) { //Verifica se encontra o simbolo simples
-					$arrayCodigoToken[] = $token;
-				}
+			if ($tokenSimboloDuplo) {
+				$arrayCodigoToken[] = $tokenSimboloDuplo;
+				$i++;
+			} else if ($tokenSimboloSimples) {
+				$arrayCodigoToken[] = $tokenSimboloSimples;
 			}
 		}
 		return $arrayCodigoToken;
+	}
+
+	function findToken($token) {
+		$tokens = $this->getTokens();
+
+		foreach ($tokens as $key => $value) {
+			if ($value->name == $token) return $value;
+		}
+
+		return false;
 	}
 }
 
