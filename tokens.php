@@ -158,7 +158,7 @@ class Tokens
 		$arrayTokens[] = $token;
 
 		$token = new Token();
-		$token->name = 'int';
+		$token->name = 'INTEGER';
 		$token->codigo = '26';
 		$token->tipoSimbolo = TipoSimbolo::NUMEROINTEIRO;
 		$arrayTokens[] = $token;
@@ -334,11 +334,11 @@ class Tokens
 			/*
 				Identificador
 				Literal
-				Vazio
+				Inteiro is_int()
 			*/
 
 			//Procura token de número inteiro
-			// $tokenNumeroInteiro = $this->findTokenNumeroInteiro(substr($linha, $i));
+			$tokenNumeroInteiro = $this->findTokenNumeroInteiro(substr($linha, $i));
 
 			//Procura token de final de arquivo
 			$tokenFimArquivo = $this->findTokenFimArquivo(substr($linha,$i,1));
@@ -352,11 +352,11 @@ class Tokens
 			if ($tokenPalavraReservada) {
 				$arrayCodigoToken[] = $tokenPalavraReservada;
 				//Se existir palavra reservada, pula os caracteres da mesma
-				$i += strlen($tokenPalavraReservada->name) -1;
-			// } else if ($tokenNumeroInteiro) {
-			// 	$arrayCodigoToken[] = $tokenNumeroInteiro;
-			// 	//Se existir palavra reservada, pula os caracteres da mesma
-			// 	$i += strlen($tokenNumeroInteiro->name) -1;
+				$i += $tokenPalavraReservada->qtdeCaracter;
+			} else if ($tokenNumeroInteiro) {
+				$arrayCodigoToken[] = $tokenNumeroInteiro;
+				//Se for inteiro, pula a quantidade de caracter do mesmo
+				$i += $tokenNumeroInteiro->qtdeCaracter;
 			} else if ($tokenFimArquivo) {
 				$arrayCodigoToken[] = $tokenFimArquivo;
 			} else if ($tokenSimboloDuplo) {
@@ -377,7 +377,10 @@ class Tokens
 			$stringToken = strtoupper(substr($token, 0, $i));
 
 			foreach ($tokens as $key => $value) {
-				if ($value->tipoSimbolo == TipoSimbolo::PALAVRARESERVADA && $value->name == $stringToken) return $value;
+				if ($value->tipoSimbolo == TipoSimbolo::PALAVRARESERVADA && $value->name == $stringToken) {
+					$value->qtdeCaracter = strlen($value->name) - 1;
+					return $value;
+				}
 			}
 		}
 
@@ -387,12 +390,19 @@ class Tokens
 	function findTokenNumeroInteiro($token) {
 		$tokens = $this->getTokens();
 
-		$token = substr($token, 0, 3);
+		$posicaoEspaco = strpos($token, ' ');
+		$stringToken = substr($token, 0, $posicaoEspaco);
 
-		foreach ($tokens as $key => $value) {
-			if ($value->tipoSimbolo == TipoSimbolo::NUMEROINTEIRO && $value->name == $token) return $value;
+		if (intval($stringToken)) {
+
+			echo $stringToken . "<br>";
+		 	foreach ($tokens as $key => $value) {
+		 		if ($value->tipoSimbolo == TipoSimbolo::NUMEROINTEIRO) {
+		 			$value->qtdeCaracter = strlen($stringToken) - 1;
+		 			return $value;
+		 		}
+		 	}
 		}
-
 		return false;
 	}
 
