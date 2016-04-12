@@ -325,50 +325,68 @@ class Tokens
 
 	//Retorna um array com a informação do código e token de cada caracter da linha
 	function getArrayCodigoToken($linha) {
+		$palavra = "";
 
 		for ($i=0; $i < strlen($linha); $i++) {
 
-			//Procura token de palavra reservada
-			$tokenPalavraReservada = $this->findTokenPalavraReservada(substr($linha, $i));
+			$caracter = $linha{$i};
 
-			/*
-				Identificador
-				Literal
-			*/
+			//Enquanto for letra ou numero, monta uma palavra
+			if (preg_match("/[a-zA-Z0-9]/ ", $caracter)) {
+				$palavra .= $caracter;
+				continue;
+			}
 
-			$tokenLiteral = $this->findTokenLiteral(substr($linha, $i));
+			if ($palavra) {
+				//Se a palavra for inteiramente numérica, retorna o token de número inteiro
+				if (is_numeric($palavra)) {
+					$arrayCodigoToken[] = $this->findTokenNumeroInteiro($palavra);
+				} else {
 
-			//Procura token de número inteiro
-			$tokenNumeroInteiro = $this->findTokenNumeroInteiro(substr($linha, $i));
+					//Procura token de palavra reservada
+					$tokenPalavraReservada = $this->findTokenPalavraReservada($palavra);
 
-			//Procura token de final de arquivo
-			$tokenFimArquivo = $this->findTokenFimArquivo(substr($linha,$i,1));
+					if ($tokenPalavraReservada) {
+						$arrayCodigoToken[] = $tokenPalavraReservada;
+					}  else {
+						$arrayCodigoToken[] = $this->findTokenIdentificador($palavra);
+					}
+				}
 
-			//Procura token de simbolo duplo
+				$palavra = "";
+			}
+
+			$tokenLiteral = $this->findTokenLiteral($caracter);
+
+			if ($tokenLiteral) {
+				$arrayCodigoToken[] = $tokenLiteral;
+				continue;
+			}
+
+			//Verifica se é um simbolo final de arquivo
+			$tokenFimArquivo = $this->findTokenFimArquivo($caracter);
+
+			if ($tokenFimArquivo) {
+				$arrayCodigoToken[] = $tokenFimArquivo;
+				continue;
+			}
+
+
+			//Vefifica se é um simbolo duplo
 			$tokenSimboloDuplo = $this->findTokenSimboloDuplo(substr($linha,$i,2));
 
-			//Procura token de simbolo simples
-			$tokenSimboloSimples = $this->findTokenSimboloSimples(substr($linha,$i,1));
-
-			if ($tokenPalavraReservada) {
-				$arrayCodigoToken[] = $tokenPalavraReservada;
-				//Se existir palavra reservada, pula os caracteres da mesma
-				$i += $tokenPalavraReservada->qtdeCaracter;
-			} else if ($tokenLiteral) {
-				$arrayCodigoToken[] = $tokenLiteral;
-				//Se for literal, pula a quantidade de caracter do mesmo
-				$i += $tokenLiteral->qtdeCaracter;
-			} else if ($tokenNumeroInteiro) {
-				$arrayCodigoToken[] = $tokenNumeroInteiro;
-				//Se for inteiro, pula a quantidade de caracter do mesmo
-				$i += $tokenNumeroInteiro->qtdeCaracter;
-			} else if ($tokenFimArquivo) {
-				$arrayCodigoToken[] = $tokenFimArquivo;
-			} else if ($tokenSimboloDuplo) {
+			if ($tokenSimboloDuplo) {
 				$arrayCodigoToken[] = $tokenSimboloDuplo;
 				$i++;
-			} else if ($tokenSimboloSimples) {
+				continue;
+			}
+
+			//Verifica se é um simbolo simples
+			$tokenSimboloSimples = $this->findTokenSimboloSimples($caracter);
+
+            if ($tokenSimboloSimples) {
 				$arrayCodigoToken[] = $tokenSimboloSimples;
+				continue;
 			}
 		}
 		return $arrayCodigoToken;
@@ -377,15 +395,22 @@ class Tokens
 	function findTokenPalavraReservada($token) {
 		$tokens = $this->getTokens();
 
-		for ($i=0; $i <= strlen($token); $i++) {
+		foreach ($tokens as $key => $value) {
+			if ($value->tipoSimbolo == TipoSimbolo::PALAVRARESERVADA && $value->name == strtoupper($token)) {
+				return $value;
+			}
+		}
 
-			$stringToken = strtoupper(substr($token, 0, $i));
+		return false;
+	}
 
-			foreach ($tokens as $key => $value) {
-				if ($value->tipoSimbolo == TipoSimbolo::PALAVRARESERVADA && $value->name == $stringToken) {
-					$value->qtdeCaracter = strlen($value->name) - 1;
-					return $value;
-				}
+	function findTokenIdentificador($token) {
+		$tokens = $this->getTokens();
+
+		foreach ($tokens as $key => $value) {
+			if ($value->tipoSimbolo == TipoSimbolo::IDENTIFICADOR) {
+				$value->qtdeCaracter = strlen($token);
+				return $value;
 			}
 		}
 
@@ -422,18 +447,11 @@ class Tokens
 	function findTokenNumeroInteiro($token) {
 		$tokens = $this->getTokens();
 
-		$posicaoEspaco = strpos($token, ' ');
-		$stringToken = substr($token, 0, $posicaoEspaco);
-
-		if (intval($stringToken)) {
-
-		 	foreach ($tokens as $key => $value) {
-		 		if ($value->tipoSimbolo == TipoSimbolo::NUMEROINTEIRO) {
-		 			$value->qtdeCaracter = strlen($stringToken) - 1;
-		 			return $value;
-		 		}
-		 	}
-		}
+	 	foreach ($tokens as $key => $value) {
+	 		if ($value->tipoSimbolo == TipoSimbolo::NUMEROINTEIRO) {
+	 			return $value;
+	 		}
+	 	}
 		return false;
 	}
 
