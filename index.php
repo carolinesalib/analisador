@@ -44,8 +44,7 @@
 			<?php
 
 			include("listaAnaliseLexica.php");
-
-			// include("listaErrosLexicos.php");
+			include("listaAnaliseSintatica.php");
 			?>
 
 		</div>
