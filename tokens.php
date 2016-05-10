@@ -392,6 +392,7 @@ class Tokens
 
 		foreach ($tokens as $key => $value) {
 			if ($value->tipoSimbolo == TipoSimbolo::PALAVRARESERVADA && $value->name == strtoupper($token)) {
+				$value->texto = $token;
 				return $value;
 			}
 		}
@@ -405,6 +406,7 @@ class Tokens
 		foreach ($tokens as $key => $value) {
 			if ($value->tipoSimbolo == TipoSimbolo::IDENTIFICADOR) {
 				$value->qtdeCaracter = strlen($token);
+				$value->texto = $token;
 				return $value;
 			}
 		}
@@ -434,6 +436,8 @@ class Tokens
 		foreach ($tokens as $key => $value) {
 			if ($value->tipoSimbolo == TipoSimbolo::LITERAL) {
 				$value->qtdeCaracter = strlen($stringToken);
+
+				$value->texto = $token;
 				return $value;
 			}
 		}
@@ -444,6 +448,8 @@ class Tokens
 
 	 	foreach ($tokens as $key => $value) {
 	 		if ($value->tipoSimbolo == TipoSimbolo::NUMEROINTEIRO) {
+
+				$value->texto = $token;
 	 			return $value;
 	 		}
 	 	}
@@ -465,7 +471,10 @@ class Tokens
 		$tokens = $this->getTokens();
 
 		foreach ($tokens as $key => $value) {
-			if ($value->tipoSimbolo == TipoSimbolo::SIMBOLODUPLO && $value->name == $token) return $value;
+			if ($value->tipoSimbolo == TipoSimbolo::SIMBOLODUPLO && $value->name == $token) {
+				$value->texto = $token;
+				return $value;
+			}
 		}
 
 		return false;
@@ -475,7 +484,10 @@ class Tokens
 		$tokens = $this->getTokens();
 
 		foreach ($tokens as $key => $value) {
-			if ($value->tipoSimbolo == TipoSimbolo::SIMBOLOSIMPLES && $value->name == $token) return $value;
+			if ($value->tipoSimbolo == TipoSimbolo::SIMBOLOSIMPLES && $value->name == $token) {
+				$value->texto = $token;
+				return $value;
+			}
 		}
 
 		return false;
