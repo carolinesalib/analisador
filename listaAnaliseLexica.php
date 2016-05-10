@@ -25,6 +25,7 @@ $linhasCodigoFonte = explode("\n", $codigoFonte);
 			<th>Linha</th>
 			<th>Código</th>
 			<th>Token</th>
+			<th>Texto</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -40,6 +41,7 @@ $linhasCodigoFonte = explode("\n", $codigoFonte);
 					echo "<td> " . ($i+1) . " </td>"; //
 					echo "<td> " . $token->codigo . " </td>";
 					echo "<td> " . $token->name . " </td>";
+					echo "<td> " . $token->texto . " </td>";
 				echo "</tr>";
 			}
 		}

@@ -6,4 +6,5 @@ class Token
 	public $codigo;
 	public $tipoSimbolo;
 	public $qtdeCaracter;
+	public $texto;
 }
