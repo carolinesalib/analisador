@@ -356,10 +356,11 @@ class Tokens
 				$palavra = "";
 			}
 
-			$tokenLiteral = $this->findTokenLiteral($caracter);
+			$tokenLiteral = $this->findTokenLiteral($caracter, $linha);
 
 			if ($tokenLiteral) {
 				$arrayCodigoToken[] = $tokenLiteral;
+				$i += $tokenLiteral->qtdeCaracter+1;
 				continue;
 			}
 
@@ -411,21 +412,21 @@ class Tokens
 		return false;
 	}
 
-	function findTokenLiteral($token) {
+	function findTokenLiteral($caracter, $linha) {
 		$tokens = $this->getTokens();
 
-		//Verifica se é token literal, chegando se inicia e termina com aspas, sejam elas simples ou duplas
-		$inicioAspasSimples = (substr($token, 0, 1) == "'");
-		$inicioAspasDuplas = (substr($token, 0, 1) == '"');
+		//Verifica se é token literal, checando se inicia e termina com aspas, sejam elas simples ou duplas
+		$inicioAspasSimples = ($caracter == "'");
+		$inicioAspasDuplas  = ($caracter == '"');
 
-		$stringDepoisAspa = substr($token, 1);
+		$linhaAposLiteral = substr($linha, strpos($linha, $caracter)+1);
 
 		if ($inicioAspasSimples) {
-			$posicaoSegundaAspa = strpos($stringDepoisAspa, "'")+1;
-			$stringToken = substr($token, 0, $posicaoSegundaAspa);
+			$posicaoSegundaAspa = strpos($linhaAposLiteral, "'")+1;
+			$stringToken = substr($linhaAposLiteral, 0, $posicaoSegundaAspa-1);
 		} else if ($inicioAspasDuplas) {
-			$posicaoSegundaAspa = strpos($stringDepoisAspa, '"')+1;
-			$stringToken = substr($token, 0, $posicaoSegundaAspa);
+			$posicaoSegundaAspa = strpos($linhaAposLiteral, '"')+1;
+			$stringToken = substr($linhaAposLiteral, 0, $posicaoSegundaAspa-1);
 		} else {
 			return false;
 		}
@@ -434,7 +435,7 @@ class Tokens
 			if ($value->tipoSimbolo == TipoSimbolo::LITERAL) {
 				$value->qtdeCaracter = strlen($stringToken);
 
-				$value->texto = $token;
+				$value->texto = $stringToken;
 				return $value;
 			}
 		}
