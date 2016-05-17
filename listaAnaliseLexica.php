@@ -14,6 +14,19 @@ $codigoFonte = Comentarios::Remove($codigoFonte);
 //Cria um array das linhas adicionadas no textarea (separando por quebra de linha)
 $linhasCodigoFonte = explode("\n", $codigoFonte);
 
+$arrayTokens = array();
+
+$arrayTokens = array();
+//Laço para percorrer cada linha do textarea
+for ($i=0; $i < sizeof($linhasCodigoFonte); $i++) {
+	//Resgata objeto tokens da linha atual
+	$arrayTokensLinha = $tokens->getArrayCodigoToken($linhasCodigoFonte[$i]);
+	if (is_array($arrayTokensLinha)){
+		$arrayTokens = array_merge($arrayTokens, $arrayTokensLinha);
+	}
+}
+
+array_push($arrayTokens, $tokens->getTokenFimArquivo());
 ?>
 <br>
 
@@ -30,20 +43,13 @@ $linhasCodigoFonte = explode("\n", $codigoFonte);
 	</thead>
 	<tbody>
 		<?php
-		//Laço para percorrer cada linha do textarea
-		for ($i=0; $i < sizeof($linhasCodigoFonte); $i++) {
-
-			//Resgata objeto tokens da linha atual
-			$arrayTokensLinha = $tokens->getArrayCodigoToken($linhasCodigoFonte[$i]);
-
-			foreach ($arrayTokensLinha as $key => $token) {
-				echo "<tr>";
-					echo "<td> " . ($i+1) . " </td>"; //
-					echo "<td> " . $token->codigo . " </td>";
-					echo "<td> " . $token->name . " </td>";
-					echo "<td> " . $token->texto . " </td>";
-				echo "</tr>";
-			}
+		foreach ($arrayTokens as $key => $token) {
+			echo "<tr>";
+				echo "<td> " . ($i+1) . " </td>"; //
+				echo "<td> " . $token->codigo . " </td>";
+				echo "<td> " . $token->name . " </td>";
+				echo "<td> " . $token->texto . " </td>";
+			echo "</tr>";
 		}
 		?>
 	</tbody>

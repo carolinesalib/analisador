@@ -363,7 +363,6 @@ class Tokens
 				continue;
 			}
 
-			
 			//Vefifica se é um simbolo duplo
 			$tokenSimboloDuplo = $this->findTokenSimboloDuplo(substr($linha,$i,2));
 
@@ -381,8 +380,6 @@ class Tokens
 				continue;
 			}
 		}
-		//Verifica se é um simbolo final de arquivo
-		$arrayCodigoToken[] = $this->findTokenFimArquivo();
 
 		return $arrayCodigoToken;
 	}
@@ -456,11 +453,12 @@ class Tokens
 		return false;
 	}
 
-	function findTokenFimArquivo() {
+	function getTokenFimArquivo() {
 		$tokens = $this->getTokens();
 
 		foreach ($tokens as $key => $value) {
-			if ($value->tipoSimbolo == TipoSimbolo::FIMARQUIVO) {return $value;
+			if ($value->tipoSimbolo == TipoSimbolo::FIMARQUIVO) {
+				return $value;
 			}
 		}
 
