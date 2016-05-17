@@ -15,8 +15,6 @@ $codigoFonte = Comentarios::Remove($codigoFonte);
 $linhasCodigoFonte = explode("\n", $codigoFonte);
 
 $arrayTokens = array();
-
-$arrayTokens = array();
 //Laço para percorrer cada linha do textarea
 for ($i=0; $i < sizeof($linhasCodigoFonte); $i++) {
 	//Resgata objeto tokens da linha atual
@@ -26,6 +24,7 @@ for ($i=0; $i < sizeof($linhasCodigoFonte); $i++) {
 	}
 }
 
+//Adiciona token final de arquivo no array
 array_push($arrayTokens, $tokens->getTokenFimArquivo());
 ?>
 <br>
