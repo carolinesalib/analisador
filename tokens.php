@@ -459,6 +459,7 @@ class Tokens
 
 		foreach ($tokens as $key => $value) {
 			if ($value->tipoSimbolo == TipoSimbolo::FIMARQUIVO) {
+				$value->texto = "Fim de arquivo";
 				return $value;
 			}
 		}

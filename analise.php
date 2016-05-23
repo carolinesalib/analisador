@@ -11,6 +11,7 @@ class Analise {
 	var $pilha = array();
 	var $matriz = array();
 	var $regraMatriz = array();
+	var $pilhaHistorico = array();
 
 	function Analise() {
 
@@ -29,26 +30,78 @@ class Analise {
 		//Cria um array das linhas adicionadas no textarea (separando por quebra de linha)
 		$linhasCodigoFonte = explode("\n", $codigoFonte);
 
-		$arrayTokens = array();
-		//Laço para percorrer cada linha do textarea
-		for ($i=0; $i < sizeof($linhasCodigoFonte); $i++) {
-			//Resgata objeto tokens da linha atual
-			$arrayTokensLinha = $this->tokens->getArrayCodigoToken($linhasCodigoFonte[$i]);
-			if (is_array($arrayTokensLinha)){
-				$arrayTokens = array_merge($arrayTokens, $arrayTokensLinha);
-			}
-		}
-
-		//Adiciona token final de arquivo no array
-		array_push($arrayTokens, $this->tokens->getTokenFimArquivo());
-
 		//Adiciona itens de entrada na pilha
 		array_push($this->pilha, '51');
 		array_push($this->pilha, '53');
 
-		$this->montaListaAnalise($arrayTokens);
+		$this->montaCabecalhoAnaliseLexica();
+
+		//Laço para percorrer cada linha do textarea
+		for ($i=0; $i < sizeof($linhasCodigoFonte); $i++) {
+
+			//Resgata objeto tokens da linha atual
+			$arrayTokens = $this->tokens->getArrayCodigoToken($linhasCodigoFonte[$i]);
+
+			//Na ultima linha adiciona token fim de arquivo
+			if ($i == sizeof($linhasCodigoFonte)-1) {
+				array_push($arrayTokens, $this->tokens->getTokenFimArquivo());
+			}
+
+			if (is_array($arrayTokens)){
+				$linha = $i+1;
+				$erro = (!$this->montaListaAnalise($arrayTokens, $linha));
+
+				if ($erro) break;
+			}
+		}
+
+		$this->montaRodapeAnaliseLexica();
+
+		$this->montaListaAnaliseSintatica();
 	}
 
+	function montaCabecalhoAnaliseLexica() {
+		echo "<br><div class=\"panel panel-default\">";
+		echo "<div class=\"panel-heading\"><b>Analise léxica</b></div>";
+		echo "<table class=\"table table-striped table-bordered\">";
+		echo "	<thead>";
+		echo "		<tr>";
+		echo "			<th>Linha</th>";
+		echo "			<th>Código</th>";
+		echo "			<th>Token</th>";
+		echo "			<th>Texto</th>";
+		echo "		</tr>";
+		echo "	</thead>";
+		echo "	<tbody>";
+	}
+
+	function montaRodapeAnaliseLexica() {
+		echo "	</tbody>";
+		echo "</table>";
+		echo "</div>";
+	}
+
+	function montaListaAnalise($arrayTokens, $linha) {
+		
+		foreach ($arrayTokens as $key => $token) {
+    		echo "<tr>";
+				echo "<td> " . $linha . " </td>"; //
+				echo "<td> " . $token->codigo . " </td>";
+				echo "<td> " . $token->name . " </td>";
+				echo "<td> " . $token->texto . " </td>";
+			echo "</tr>";
+			
+			$aSintatica = $this->analiseSintatica($token, $this->pilha);
+			if ($aSintatica) {
+				$this->pilha = $aSintatica;
+			} else {
+				$mensagemErro = "Um erro de sintaxe foi encontrado na linha ".$linha.". Código: ".$token->codigo." Token: ". $token->texto;
+				echo "<script>alert('".$mensagemErro."');</script>";
+				return false;
+			}
+		}
+		return true;
+	}
 
 	function analiseSintatica($simboloEntrada, $pilha) {
 
@@ -57,32 +110,62 @@ class Analise {
 		$x = (string)end($pilha);
 		$a = (string)$simboloEntrada->codigo;
 
+		$posicao = 0;
+
 		do {
+			$posicao++;
 
-			echo 'analisando ' . $x . ' - ' . $a . "<br>";
-
-			if ($x == '') {
+			if ($x == '52') {
+				array_push($this->pilhaHistorico, array(
+					"pilha"=>join(', ', $pilha),
+					"inserido" => '',
+					"removido" => $x,
+					"x" => $x,
+					"a" => $a
+				));
 				array_pop($pilha);
 				$x = end($pilha);
 			} else if ($tokens->isSimboloTerminal($x)) {
-
-				echo 'terminal '.$x . ' - ' . $a . "<br>";
 				if ($x == $a) {
+					array_push($this->pilhaHistorico, array(
+						"pilha"=>join(', ', $pilha),
+						"inserido" => '',
+						"removido" => $x,
+						"x" => $x,
+						"a" => $a
+					));
 					array_pop($pilha);
 					return $pilha;
 				} else {
 					return false;
 				}
 			} else {
-				echo 'não terminal '.$x . ' - ' . $a . "<br>";
 				$valorMatriz = $this->matriz[$x][$a];
-				echo "valor regra: ".$valorMatriz;
 				if ($valorMatriz != null) {
+
+					array_push($this->pilhaHistorico, array(
+						"pilha"=>join(', ', $pilha),
+						"inserido" => '',
+						"removido" => $x,
+						"x" => $x,
+						"a" => $a
+					));
+
 					array_pop($pilha);
+
 					$regra = $this->regraMatriz[$valorMatriz];
-					echo "regra <br><pre>";print_r($regra);
-					$pilha = array_merge($regra, $pilha);
-					$pilha = array_reverse($pilha);
+					$regra = array_reverse($regra);
+
+					array_push($this->pilhaHistorico, array(
+						"pilha"=>join(', ', $pilha),
+						"inserido" => join(', ', $regra),
+						"regra" => $valorMatriz,
+						"x" => $x,
+						"a" => $a
+					));
+
+					$pilha = array_merge($pilha, $regra);
+
 					$x = end($pilha);
 				} else {
 					return false;
@@ -94,72 +177,45 @@ class Analise {
 		return $pilha;
 	}
 
-// Início
-//     X recebe o topo da pilha
-//     “a”  recebe o símbolo da entrada
-// Repita
-//     Se X=î então
-//         Retire o elemento do topo da pilha
-//         X recebe o topo da pilha
-//     Senão
-//     Se X é terminal então
-//         Se X=a então
-//            Retire o elemento do topo da pilha
-//            Sai do Repita
-//         Senão
-//                Erro
-//            Encerra o programa
-//        Fim Se
-//     Senão (* X é não-terminal*)
-//         Se M(X,a) <>   então (existe uma regra | simbolo estranho é null)
-//              Retire o elemento do topo da pilha
-//                         Coloque o conteúdo da regra na pilha
-//              X recebe o topo da pilha
-//         Senão
-//             Erro
-//             Encerra o programa
-//         Fim Se
-//     Fim Se
-// Até X=$ (*pilha vazia, análise concluída*)
-// Fim
-
-	function montaListaAnalise($arrayTokens) {
-		echo "<div class=\"panel panel-default\">";
-		echo "<div class=\"panel-heading\"><b>Analise léxica</b></div>";
-		echo "<table class=\"table\">";
+	function montaCabecalhoAnaliseSintatica() {
+		echo "<br><div class=\"panel panel-default\">";
+		echo "<div class=\"panel-heading\"><b>Analise sintática</b></div>";
+		echo "<table class=\"table table-striped table-bordered\">";
 		echo "	<thead>";
 		echo "		<tr>";
-		echo "			<th>Linha</th>";
-		echo "			<th>Código</th>";
-		echo "			<th>Token</th>";
-		echo "			<th>Texto</th>";
+		echo "			<th>Pilha</th>";
+		echo "			<th>Elemento inserido</th>";
+		echo "			<th>Regra</th>";
+		echo "			<th>Elemento removido</th>";
+		echo "			<th>x</th>";
+		echo "			<th>a</th>";
 		echo "		</tr>";
 		echo "	</thead>";
 		echo "	<tbody>";
-		
-		foreach ($arrayTokens as $key => $token) {
-    		echo "<tr>";
-				echo "<td> " . ($i+1) . " </td>"; //
-				echo "<td> " . $token->codigo . " </td>";
-				echo "<td> " . $token->name . " </td>";
-				echo "<td> " . $token->texto . " </td>";
-			echo "</tr>";
-			
-			$aSintatica = $this->analiseSintatica($token, $this->pilha);
-			if ($aSintatica) {
-				$this->pilha = $aSintatica;
-			} else {
-				$mensagemErro = "Um erro foi encontrado na linha: ".($i+1)." Token: ". $token->name;
-				echo "<script>alert('".$mensagemErro."');</script>";
-				break;
-			}
-		}
+	}
 
-		echo "<pre>pilha<br>";print_r($pilha);
-		
+	function montaRodapeAnaliseSintatica() {
 		echo "	</tbody>";
 		echo "</table>";
 		echo "</div>";
+	}
+
+
+	function montaListaAnaliseSintatica() {
+		$this->montaCabecalhoAnaliseSintatica();
+
+		foreach ($this->pilhaHistorico as $key => $h) {
+    		echo "<tr>";
+				echo "<td> " . $h['pilha'] . " </td>";
+				echo "<td> " . $h['inserido'] . " </td>";
+				echo "<td> " . $h['regra'] . " </td>";
+				echo "<td> " . $h['removido'] . " </td>";
+				echo "<td> " . $h['x'] . " </td>";
+				echo "<td> " . $h['a'] . " </td>";
+			echo "</tr>";
+		}
+
+		$this->montaRodapeAnaliseSintatica();
 	}
 
 }
