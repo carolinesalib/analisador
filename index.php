@@ -43,9 +43,10 @@
 
 			<?php
 
-			include("listaAnaliseLexica.php");
+			include("analise.php");
 
-			// include("listaErrosLexicos.php");
+			$analise = new Analise();
+
 			?>
 
 		</div>

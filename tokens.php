@@ -492,11 +492,14 @@ class Tokens
 		return false;
 	}
 
-	function isSimboloTerminal($token) {
+	function isSimboloTerminal($tokenCodigo) {
+
+		if (is_null($tokenCodigo)) return false;
+
 		$tokens = $this->getTokens();
 
 		foreach ($tokens as $key => $value) {
-			if ($value->name == $token->name) return true;
+			if ($value->codigo == $tokenCodigo) return true;
 		}
 		return false;
 	}
