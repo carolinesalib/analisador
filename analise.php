@@ -110,11 +110,7 @@ class Analise {
 		$x = (string)end($pilha);
 		$a = (string)$simboloEntrada->codigo;
 
-		$posicao = 0;
-
-		do {
-			$posicao++;
-
+		while ($x != '51') { //pilha vazia, final arquivo{
 			if ($x == '52') {
 				array_push($this->pilhaHistorico, array(
 					"pilha"=>join(', ', $pilha),
@@ -137,6 +133,11 @@ class Analise {
 					array_pop($pilha);
 					return $pilha;
 				} else {
+					array_push($this->pilhaHistorico, array(
+						"pilha"=>join(', ', $pilha),
+						"x" => $x,
+						"a" => $a
+					));
 					return false;
 				}
 			} else {
@@ -165,14 +166,17 @@ class Analise {
 					));
 
 					$pilha = array_merge($pilha, $regra);
-
 					$x = end($pilha);
 				} else {
+					array_push($this->pilhaHistorico, array(
+						"pilha"=>join(', ', $pilha),
+						"x" => $x,
+						"a" => $a
+					));
 					return false;
 				}	
 			}
-
-		} while ($x != '51'); //pilha vazia, final arquivo
+		}
 
 		return $pilha;
 	}
