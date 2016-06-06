@@ -326,6 +326,7 @@ class Tokens
 	//Retorna um array com a informação do código e token de cada caracter da linha
 	function getArrayCodigoToken($linha) {
 		$palavra = "";
+		$arrayCodigoToken = array();
 
 		for ($i=0; $i < strlen($linha); $i++) {
 
