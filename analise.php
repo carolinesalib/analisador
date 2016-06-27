@@ -12,6 +12,7 @@ class Analise {
 	var $matriz = array();
 	var $regraMatriz = array();
 	var $pilhaHistorico = array();
+	var $tabelaSimbolos = array();
 
 	function Analise() {
 
@@ -82,7 +83,7 @@ class Analise {
 	}
 
 	function montaListaAnalise($arrayTokens, $linha) {
-		
+
 		foreach ($arrayTokens as $key => $token) {
     		echo "<tr>";
 				echo "<td> " . $linha . " </td>"; //
@@ -90,7 +91,7 @@ class Analise {
 				echo "<td> " . $token->name . " </td>";
 				echo "<td> " . $token->texto . " </td>";
 			echo "</tr>";
-			
+
 			$aSintatica = $this->analiseSintatica($token, $this->pilha);
 			if ($aSintatica) {
 				$this->pilha = $aSintatica;
@@ -99,8 +100,35 @@ class Analise {
 				echo "<script>alert('".$mensagemErro."');</script>";
 				return false;
 			}
+
+			$this->analiseSemantica($token, $linha);
 		}
 		return true;
+	}
+
+	function analiseSemantica($token, $linha) {
+		if ($token->codigo != 25) return;
+
+		$identificadorProcedure = 64;
+		$identificadorVariavel = 57;
+
+		$identificadorPilha = end($this->pilha);
+
+		if ($identificadorPilha == $identificadorProcedure) {
+			array_push($this->tabelaSimbolos, array(
+				"nome"=>$token->texto,
+				"categoria" => 1,
+				"tipo" => "int",
+				"linha" => $linha
+			));
+		} elseif ($identificadorPilha == $identificadorVariavel) {
+			array_push($this->tabelaSimbolos, array(
+				"nome"=>$token->texto,
+				"categoria" => 2,
+				"tipo" => "int",
+				"linha" => $linha
+			));
+		}
 	}
 
 	function analiseSintatica($simboloEntrada, $pilha) {
@@ -174,7 +202,7 @@ class Analise {
 						"a" => $a
 					));
 					return false;
-				}	
+				}
 			}
 		}
 
