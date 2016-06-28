@@ -59,6 +59,8 @@ class Analise {
 		$this->montaRodapeAnaliseLexica();
 
 		$this->montaListaAnaliseSintatica();
+
+		$this->analiseSemanticaFinal();
 	}
 
 	function montaCabecalhoAnaliseLexica() {
@@ -104,41 +106,20 @@ class Analise {
 			if (!$this->analiseSemantica($token, $linha)) {
 				return false;
 			}
-	// 		if ($token->codigo == 25) {
-	//
-	// 			$identificadorProcedure = 64;
-	// 			$identificadorVariavel = 57;
-	//
-	// 			$identificadorPilha = end($this->pilha);
-	//
-	// 			if ($identificadorPilha == $identificadorProcedure) {
-	// 				array_push($this->tabelaSimbolos, array(
-	// 					"nome"=>$token->texto,
-	// 					"categoria" => 1,
-	// 					"tipo" => "int",
-	// 					"linha" => $linha
-	// 				));
-	// 			} elseif ($identificadorPilha == $identificadorVariavel) {
-	//
-	// 				foreach ($this->tabelaSimbolos as $key => $simbolo) {
-	// 					if ($simbolo == $token->texto) {
-	//
-	// 							$mensagemErro = "Um erro de semantica foi encontrado na linha ".$linha.". Código: ".$token->codigo." Token: ". $token->texto;
-	// 							echo "<script>alert('teste');</script>";
-	// 							return false;
-	// 					}
-	// 				}
-	//
-	// 				array_push($this->tabelaSimbolos, array(
-	// 					"nome"=>$token->texto,
-	// 					"categoria" => 2,
-	// 					"tipo" => "int",
-	// 					"linha" => $linha
-	// 				));
-	// 			}
-	// }
 		}
 		return true;
+	}
+
+
+	function analiseSemanticaFinal() {
+		foreach ($this->tabelaSimbolos as $key => $simbolo) {
+			//Verifica erro semantico #110
+			if ($simbolo["categoria"] == 2 && !$simbolo["iniciada"]) {
+					$mensagemErro = "#110 Um erro de semantica foi encontrado na linha ".$simbolo["linha"].". Variávele criada e nunca iniciada: ".$simbolo["nome"];
+					echo "<script>alert('$mensagemErro');</script>";
+					return false;
+			}
+		}
 	}
 
 	function analiseSemantica($token, $linha) {
@@ -146,6 +127,7 @@ class Analise {
 
 		$identificadorProcedure = 64;
 		$identificadorVariavel = 57;
+		$identificadorRecebe = 68;
 
 		$identificadorPilha = end($this->pilha);
 
@@ -190,6 +172,12 @@ class Analise {
 				"tipo" => "int",
 				"linha" => $linha
 			));
+		} elseif ($identificadorPilha == $identificadorRecebe) {
+			foreach ($this->tabelaSimbolos as $key => $simbolo) {
+				if ($simbolo["nome"] == $token->texto) {
+					$this->tabelaSimbolos[$key]["iniciada"] = true;
+				}
+			}
 		}
 
 		return true;
