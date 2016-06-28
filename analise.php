@@ -150,6 +150,16 @@ class Analise {
 		$identificadorPilha = end($this->pilha);
 
 		if ($identificadorPilha == $identificadorProcedure) {
+
+			foreach ($this->tabelaSimbolos as $key => $simbolo) {
+				//Verifica erro semantico #120
+				if ($simbolo["categoria"] == 1 && $simbolo["nome"] == $token->texto) {
+						$mensagemErro = "#120 Um erro de semantica foi encontrado na linha ".$linha.". Procedure existente com nome repetido: ".$token->texto;
+						echo "<script>alert('$mensagemErro');</script>";
+						return false;
+				}
+			}
+
 			array_push($this->tabelaSimbolos, array(
 				"nome"=>$token->texto,
 				"categoria" => 1,
@@ -160,14 +170,14 @@ class Analise {
 
 			//Verifica erro semantico #101
 			if (is_numeric(substr($token->texto,0,1))) {
-					$mensagemErro = "#101 Um erro de semantica foi encontrado na linha ".$linha.". Variável iniciada com número: ".$token->texto;
+					$mensagemErro = "#101 Um erro de semantica foi encontrado na linha ".$linha.". Variável não pode começar com números: ".$token->texto;
 					echo "<script>alert('$mensagemErro');</script>";
 					return false;
 			}
 
 			foreach ($this->tabelaSimbolos as $key => $simbolo) {
 				//Verifica erro semantico #100
-				if ($simbolo["nome"] == $token->texto) {
+				if ($simbolo["categoria"] == 2 && $simbolo["nome"] == $token->texto) {
 						$mensagemErro = "#100 Um erro de semantica foi encontrado na linha ".$linha.". Variável com nome repetido: ".$token->texto;
 						echo "<script>alert('$mensagemErro');</script>";
 						return false;
